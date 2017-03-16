@@ -36,6 +36,11 @@ drop.get("friends") { req in
     return try JSON(node: nodeDictionary)
 }
 
+drop.post("friend") { req in
+    var friend = try Friend(node: req.json)
+    try friend.save()
+    return try friend.makeJSON()
+}
 
 drop.resource("posts", PostController())
 

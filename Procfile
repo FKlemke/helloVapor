@@ -1,1 +1,2 @@
 web: App --env=production --workdir="./"
+web: App --env=production --workdir=./ --config:servers.default.port=$PORT --config:postgresql.url=$postgres://krdgzqsbezscai:73d206622ad7872e2e4452a8e96692d8fffaaeeba960872aef91e1e00ad21674@ec2-54-225-66-44.compute-1.amazonaws.com:5432/d8mc5833onk5q

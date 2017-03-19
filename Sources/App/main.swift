@@ -7,11 +7,11 @@ let drop = Droplet()
 drop.preparations.append(Friend.self)
 try drop.addProvider(VaporPostgreSQL.Provider.self)
 
-do {
-    try drop.addProvider(VaporPostgreSQL.Provider.self)
-} catch {
-    assertionFailure("Error adding SQL provider: \(error)")
-}
+//do {
+//    try drop.addProvider(VaporPostgreSQL.Provider.self)
+//} catch {
+//    assertionFailure("Error adding SQL provider: \(error)")
+//}
 
 
 //routes
@@ -96,7 +96,12 @@ drop.get("json") { request in
         ])
 }
 
+//views
+drop.get("htmltest") { request in
+    return try drop.view.make("index.html")
+}
 
+    
 drop.resource("posts", PostController())
 
 drop.run()

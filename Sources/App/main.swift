@@ -66,9 +66,19 @@ drop.get("404") { request in
 }
 
 drop.get("error") { request in
-    throw Abort.custom(status: .badRequest, message: "Sorry 😱")
+    throw Abort.custom(status: .badRequest, message: "Sorry 😱 a terrible error happened here")
 }
-    
+
+//json response
+drop.get("json") { request in
+    return try JSON(node: [
+        "number": 123,
+        "text": "unicorns",
+        "bool": false
+        ])
+}
+
+
 
 drop.resource("posts", PostController())
 

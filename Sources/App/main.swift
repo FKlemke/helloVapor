@@ -78,7 +78,10 @@ drop.get("json") { request in
         ])
 }
 
-
+//nesting slashes FALLBACK routes
+drop.get("anything", "*") { request in
+    return "Matches anything after /anything"
+}
 
 drop.resource("posts", PostController())
 

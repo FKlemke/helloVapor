@@ -13,14 +13,6 @@ try drop.addProvider(VaporPostgreSQL.Provider.self)
 //    assertionFailure("Error adding SQL provider: \(error)")
 //}
 
-
-//routes
-drop.get { req in
-    return try drop.view.make("welcome", [
-    	"message": drop.localization[req.lang, "welcome", "title"]
-    ])
-}
-
 drop.get("helloFelix") {reg in
     return "Hello Felix!"
 }
@@ -101,7 +93,23 @@ drop.get("htmltest") { request in
     return try drop.view.make("index.html")
 }
 
-    
+//they can contain context
+drop.get("template") { request in
+    return try drop.view.make("welcome", [
+        "message": "So all my bitches and my niggas and my niggas and my bitches Wave your motherfuckin hands in the air And if you dont give a shit like we don t give a shit Wave your motherfuckin fingers in the air"
+        ])
+}
+
+drop.get("helloleaf"){ req in
+    return try drop.view.make("hello")
+}
+
+drop.get { req in
+    return try drop.view.make("welcome", [
+        "message": drop.localization[req.lang, "welcome", "title"]
+        ])
+}
+
 drop.resource("posts", PostController())
 
 drop.run()

@@ -10,7 +10,7 @@ try drop.addProvider(VaporPostgreSQL.Provider.self)
 do {
     try drop.addProvider(VaporPostgreSQL.Provider.self)
 } catch {
-    assertionFailure("Error adding provider: \(error)")
+    assertionFailure("Error adding SQL provider: \(error)")
 }
 
 
@@ -69,6 +69,24 @@ drop.get("error") { request in
     throw Abort.custom(status: .badRequest, message: "Sorry 😱 a terrible error happened here")
 }
 
+//nesting slashes FALLBACK routes
+drop.get("anything", "*") { request in
+    return "Matches anything after /anything"
+}
+
+
+//postname send a json to route
+drop.post("jsonname") { request in
+    guard let name = request.json?["name"]?.string else {
+        throw Abort.badRequest
+    }
+    guard let age = request.json?["age"]?.string else {
+        throw Abort.badRequest
+    }
+    
+    return "Hello, \(name) your age is \(age)!"
+}
+
 //json response
 drop.get("json") { request in
     return try JSON(node: [
@@ -78,10 +96,6 @@ drop.get("json") { request in
         ])
 }
 
-//nesting slashes FALLBACK routes
-drop.get("anything", "*") { request in
-    return "Matches anything after /anything"
-}
 
 drop.resource("posts", PostController())
 

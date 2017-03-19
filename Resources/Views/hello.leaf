@@ -3,6 +3,11 @@
 <head></head>
 <body>
 <h1>Doggystyle</h1>
+<p>This is a poem from #(greetingSnoop)</p>
+
+<h1>Hello #(greeting)</h1>
+#loop(worlds, "world") { <li>Hello #(world)</li> }
+
 <p>Way past a freak, I'm more like disgusting
 Pussy taste sweeter than sweet potato pumpkins
 Stay ass naked, clothes haven't been worn

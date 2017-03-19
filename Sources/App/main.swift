@@ -5,6 +5,7 @@ import HTTP
 
 let drop = Droplet()
 drop.preparations.append(Friend.self)
+
 try drop.addProvider(VaporPostgreSQL.Provider.self)
 
 //do {
@@ -12,6 +13,18 @@ try drop.addProvider(VaporPostgreSQL.Provider.self)
 //} catch {
 //    assertionFailure("Error adding SQL provider: \(error)")
 //}
+
+//adding middleware
+//will add the version of our API to each response
+final class VersionMiddleware: Middleware {
+    func respond(to request: Request, chainingTo next: Responder) throws -> Response {
+        let response = try next.respond(to: request)
+        response.headers["Version"] = "API v1.0"
+        return response
+    }
+}
+drop.middleware.append(VersionMiddleware())
+
 
 drop.get("helloFelix") {reg in
     return "Hello Felix!"
@@ -101,7 +114,8 @@ drop.get("template") { request in
 }
 
 drop.get("helloleaf"){ req in
-    return try drop.view.make("hello")
+    return try drop.view.make("hello", [
+        "greetingSnoop": "Snoop DOGGG"])
 }
 
 drop.get { req in
@@ -109,6 +123,12 @@ drop.get { req in
         "message": drop.localization[req.lang, "welcome", "title"]
         ])
 }
+
+drop.get("helloworld") { req in
+    let greetings = ["Mundo", "Monde", "Welt"]
+    return try drop.view.make("hello", ["greeting": "World", "worlds": greetings.makeNode()])
+}
+
 
 drop.resource("posts", PostController())
 

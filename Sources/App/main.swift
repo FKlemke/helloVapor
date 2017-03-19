@@ -1,5 +1,6 @@
 import Vapor
 import VaporPostgreSQL
+import HTTP
 
 
 let drop = Droplet()
@@ -49,6 +50,25 @@ drop.post("friend") { req in
     try friend.save()
     return try friend.makeJSON()
 }
+
+//drop.delete("delete", Int.self){ reg, delID in {
+//    
+//    }
+
+
+drop.get("vapor") { request in
+    return Response(redirect: "http://vapor.codes")
+}
+
+//error messages
+drop.get("404") { request in
+    throw Abort.notFound
+}
+
+drop.get("error") { request in
+    throw Abort.custom(status: .badRequest, message: "Sorry 😱")
+}
+    
 
 drop.resource("posts", PostController())
 

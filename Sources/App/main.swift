@@ -2,12 +2,16 @@ import Vapor
 import VaporPostgreSQL
 import HTTP
 
-
+//create DROPLET
 let drop = Droplet()
+//adding models
 drop.preparations.append(Friend.self)
+drop.preparations.append(User.self)
 
+//adding providers
 try drop.addProvider(VaporPostgreSQL.Provider.self)
 
+//adding providers and catching error
 //do {
 //    try drop.addProvider(VaporPostgreSQL.Provider.self)
 //} catch {
@@ -26,6 +30,7 @@ final class VersionMiddleware: Middleware {
 drop.middleware.append(VersionMiddleware())
 
 
+//simple routes
 drop.get("helloFelix") {reg in
     return "Hello Felix!"
 }
@@ -41,6 +46,29 @@ drop.get("hello", Int.self) {reg, userID in
 //    let friendsNode = try friends.makeNode()
 //    let nodeDictionary = ["friends": friendsNode]
 //    return try JSON(node: nodeDictionary)
+//}
+
+//users
+drop.post("user") { req in
+    var user = try User(node: req.json)
+    try user.save()
+    return try user.makeJSON()
+}
+
+drop.get("users") { req in
+    var users = try User.all().makeNode()
+    let usersDic = ["users" : users]
+    return try JSON(node: usersDic)
+}
+
+drop.get("user", Int.self){reg, userId in
+    let user = try User.find(userId)
+    return try JSON(node: user)
+}
+
+//drop.get("userbyname", String.self){ reg, usrName in
+//    let smithsQuery = try User.query().filter("name", "Smith")
+//    return smithsQuery
 //}
 
 
@@ -92,7 +120,7 @@ drop.post("jsonname") { request in
     return "Hello, \(name) your age is \(age)!"
 }
 
-//json response
+//json response with different types
 drop.get("json") { request in
     return try JSON(node: [
         "number": 123,
